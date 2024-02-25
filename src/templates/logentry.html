@@ -1,0 +1,9 @@
+{% if logs %}
+<input id="lastlog" name="date" type="hidden" value="{{ logs[0].date }}" />
+<div id="logs" class="divide-y divide-gray-400 dark:divide-white" hx-trigger="refresh" hx-post="command:refresh_logs"
+  hx-include="#lastlog" hx-swap="afterbegin transition:true" hx-target="#logs">
+  {% for log in logs %}
+  {% include "logchunk.html" %}
+  {% endfor %}
+</div>
+{% endif %}

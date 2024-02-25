@@ -1,0 +1,52 @@
+[package]
+name = "livelog-ui"
+version = "0.0.1"
+description = "A live logging application to redirect application logs to."
+authors = ["AcidIndustries"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "1.5", features = [] }
+
+[dependencies]
+tauri = { version = "1.5", features = ["api-all"] }
+serde_json = "1.0"
+tera = "1"
+lazy_static = "1.4.0"
+dirs = "5.0.1"
+dotenv = "0.15.0"
+dotenv_codegen = "0.15.0"
+log = "0.4.20"
+
+[dependencies.include_dir]
+version = "0.7.3"
+features = ["glob"]
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[dependencies.rocket]
+version = "0.5.0"
+features = ["json"]
+
+[dependencies.sqlx]
+version = "0.7.3"
+features = ["runtime-async-std", "macros", "migrate", "sqlite", "time", "json", "uuid", "chrono"]
+
+[dependencies.chrono]
+version = "*"
+features = ["serde"]
+
+[dependencies.uuid]
+version = "1.7.0"
+features = ["v4", "fast-rng", "serde"]
+
+[dependencies.rocket_db_pools]
+version = "0.1.0"
+features = ["sqlx_sqlite"]
+
+[features]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]
