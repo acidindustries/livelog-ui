@@ -6,12 +6,15 @@ static TEMPLATES_DIR: Dir = include_dir!("./templates");
 
 lazy_static! {
     pub static ref TEMPLATES: Tera = {
-        println!("Using directory {:?}", TEMPLATES_DIR);
         let mut tera = Tera::default();
         for file in TEMPLATES_DIR.find("**/*.html").unwrap() {
-            match tera.add_raw_template(file.path().file_name().unwrap().to_str().unwrap(), file.as_file().unwrap().contents_utf8().unwrap()) {
-                Ok(_) => (),
-                Err(e) => println!("Error adding template {} to compiled templates", e)
+            if let Some(template_file) = file.as_file() {
+                if let Some(template_name) = file.path().file_name() {
+                    match tera.add_raw_template(template_name.to_str().unwrap(), template_file.contents_utf8().unwrap()) {
+                        Ok(_) => (),
+                        Err(e) => println!("Error adding template {} to compiled templates", e)
+                    }
+                }
             }
         }
         // let template_path = TEMPLATES_DIR.path();

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.fade-in-htmx {
+  @apply ease-in-out duration-300;
+}
+
 .menu-item {
   @apply hover:bg-red-500 transition ease-in-out duration-300 dark:text-slate-100;
 }

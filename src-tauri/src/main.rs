@@ -19,7 +19,8 @@ fn main() {
         .manage(db::Db(tauri::async_runtime::block_on(db::init())))
         .invoke_handler(tauri::generate_handler![
             commands::logs,
-            commands::refresh_logs
+            commands::refresh_logs,
+            commands::delete_log
         ])
         .setup(|app| {
             let app_handle = app.handle();

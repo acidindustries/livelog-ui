@@ -1,6 +1,0 @@
-{% if logs %}
-<input id="lastlog" name="date" type="hidden" value="{{ logs[0].date }}" hx-swap-oob="true" />
-{% for log in logs %}
-{% include "logchunk.html" %}
-{% endfor %}
-{% endif %}

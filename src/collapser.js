@@ -11,7 +11,7 @@
       this.key = key
 
       /** @param {string} */
-      this.type = Array.isArray(item) ? "array" : typeof item
+      this.type = Array.isArray(item) ? "array" : item === undefined ? "null" : typeof item
 
       /** @param {Number} */
       this.depth = parent ? parent.depth + 1 : 0
@@ -57,15 +57,14 @@
   class JsonView {
     static DefaultColorMap = {
       text: {
-        string: "green",
-        number: "#f9ae58",
-        boolean: "#ca4ff8",
-        array: "black",
-        object: "black",
+        string: "text-lime-600",
+        number: "text-orange-600",
+        boolean: "text-indigo-600",
+        array: "text-gray-600 dark:text-white",
+        object: "text-gray-600 dark:text-white",
       },
       bg: {
         object: undefined,
-        // ... You can add more by yourself. They are like the text as above.
       }
     }
 
@@ -97,45 +96,34 @@
         const typeName = node.type
         switch (typeName) {
           case "object":
-            if (node.value !== null)
+            if (node.value !== null && node.value !== undefined)
                 return `object {${Object.keys(node.value).length}}`
             else
                 return 'null'
           case "array":
-            if (node.value !== null)
+            if (node.value !== null && node.value !== undefined)
                 return `array {${Object.keys(node.value).length}}`
             else
                 return 'null'
           default:
-            if (node.value !== null)
+            if (node.value !== null && node.value !== undefined)
                 return node.value
             else
                 return 'null'
         }
       }      
-      // const getValue = (node) => {
-      //   const typeName = node.type
-      //   switch (typeName) {
-      //     case "object":
-      //       return `object {${Object.keys(node.value).length}}`
-      //     case "array":
-      //       return `array [${Object.keys(node.value).length}]`
-      //     default:
-      //       return node.value
-      //   }
-      // }
 
-      const arrowIcon = ["object", "array"].includes(node.type) ? `<i class="fas fa-caret-down"></i>` : ""
+      const arrowIcon = ["object", "array"].includes(node.type) ? node.value !== null ? `<i class="fas fa-caret-right"></i>` : "" : "";
       const divFlag = document.createRange().createContextualFragment(`<div style="margin-left:${node.depth * 18}px">${arrowIcon}</div>`)
       const divElem = divFlag.querySelector("div")
 
-      const textColor = colorMap.text[node.type] !== undefined ? `color:${colorMap.text[node.type]}` : ""
-      const bgColor = colorMap.bg[node.type] !== undefined ? `background-color:${colorMap.bg[node.type]}` : ""
-      const valueStyle = (textColor + bgColor).length > 0 ? `style=${[textColor, bgColor].join(";")}` : ""
+      const textColor = colorMap.text[node.type] !== undefined ? colorMap.text[node.type] : ""
+      // const bgColor = colorMap.bg[node.type] !== undefined ? `background-color:${colorMap.bg[node.type]}` : ""
+      const valueStyle = (textColor).length > 0 ? textColor : ""
 
       const keyName = node.depth !== 0 ? node.key + JsonView.SEPARATOR : "" // depth = 0 its key is "root" which is created by the system, so ignore it.
       const spanFlag = document.createRange().createContextualFragment(
-        `<span class="ms-2">${keyName}<span ${valueStyle}>${getValue(node)}</span></span>`
+        `<span class="ms-2">${keyName}<span class="${valueStyle}">${getValue(node)}</span><span class="dark:text-gray-300 text-gray-600 text-xs pl-1 text-opacity-25">(${node.type})</span></span>`
       )
 
       const isCollapsible = ["object", "array"].includes(node.type)
@@ -144,6 +132,8 @@
         const subElem = this.#render(subNode, colorMap)
 
         if (isCollapsible) {
+        subElem.dataset.toggle = "none";
+            subElem.querySelectorAll(`*`).forEach(e => e.style.display = subElem.dataset.toggle)
           divFlag.querySelector(`i`).addEventListener("click", (e) => {
             e.stopPropagation()
             subElem.dataset.toggle = subElem.dataset.toggle === undefined ? "none" :

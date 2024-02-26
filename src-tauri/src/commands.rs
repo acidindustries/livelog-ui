@@ -1,4 +1,5 @@
 use log;
+use sqlx::Execute;
 use tauri::State;
 use tera::Context;
 
@@ -40,5 +41,17 @@ pub async fn refresh_logs<'a>(db: State<'_, Db>, date: &'a str) -> Result<String
     context.insert("logs", &logs);
     Ok(templating::TEMPLATES
         .render("newlogs.html", &context)
+        .unwrap())
+}
+
+#[tauri::command]
+pub async fn delete_log<'a>(db: State<'_, Db>, id: &'a str) -> Result<String, ()> {
+    let statement = sqlx::query(r"DELETE FROM logs WHERE id LIKE ?;")
+        .bind(id)
+        .execute(&**db)
+        .await;
+
+    Ok(templating::TEMPLATES
+        .render("notice.html", &Context::new())
         .unwrap())
 }

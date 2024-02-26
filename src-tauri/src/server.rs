@@ -8,7 +8,7 @@ pub async fn init(
 ) -> Result<rocket::Rocket<rocket::Ignite>, rocket::Error> {
     rocket::build()
         .manage(tx_channel)
-        .mount("/", routes![endpoints::ingest, endpoints::test])
+        .mount("/", routes![endpoints::ingest])
         .launch()
         .await
 }

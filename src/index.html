@@ -9,7 +9,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LiveLog 🔴</title>
-  <script type="module" src="./main.js" defer></script>
+  <script type="module" src="./main.js" defer>
+  </script>
+  <script src="site.js"></script>
+  <script type="module" src="collapser.js"></script>
+  <script src="_hyperscript.min.js"></script>
   <link rel="stylesheet" href="main.css" />
   <link rel="stylesheet" href="site.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
@@ -55,13 +59,9 @@
   </div>
   <div class="flex-1 flex flex-col bg-white dark:bg-slate-800 sm:flex-row overflow-auto max-h-screen">
     <main id="mainContent" class="flex-1 whitespace-nowrap rounded-sm" id="content" hx-post="command:logs"
-      hx-trigger="load once delay:5s">
+      hx-trigger="load once delay:1s">
     </main>
   </div>
-  <script src="site.js">
-  </script>
-  <script type="module" src="collapser.js"></script>
-  <script src="_hyperscript.min.js"></script>
 </body>
 
 </html>
