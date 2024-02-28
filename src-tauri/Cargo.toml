@@ -13,10 +13,10 @@ opt-level = "s"
 strip = true
 
 [build-dependencies]
-tauri-build = { version = "1.5", features = [] }
+tauri-build = { version = "2.0.0-beta", features = [] }
 
 [dependencies]
-tauri = { version = "1.5", features = ["api-all"] }
+tauri = { version = "2.0.0-beta", features = ["tray-icon"] }
 serde_json = "1.0"
 tera = "1"
 lazy_static = "1.4.0"
@@ -24,6 +24,14 @@ dirs = "5.0.1"
 dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
 log = "0.4.20"
+tauri-plugin-fs = "2.0.0-beta.1"
+tauri-plugin-http = "2.0.0-beta.1"
+tauri-plugin-dialog = "2.0.0-beta.1"
+tauri-plugin-notification = "2.0.0-beta.1"
+tauri-plugin-os = "2.0.0-beta.1"
+tauri-plugin-process = "2.0.0-beta.1"
+tauri-plugin-clipboard-manager = "2.0.0-beta.1"
+tauri-plugin-shell = "2.0.0-beta.1"
 
 [dependencies.include_dir]
 version = "0.7.3"
@@ -57,3 +65,6 @@ features = ["sqlx_sqlite"]
 # this feature is used for production builds or when `devPath` points to the filesystem
 # DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]
+
+[target."cfg(not(any(target_os = \"android\", target_os = \"ios\")))".dependencies]
+tauri-plugin-global-shortcut = "2.0.0-beta.1"

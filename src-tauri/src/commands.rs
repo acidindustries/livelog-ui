@@ -55,3 +55,14 @@ pub async fn delete_log<'a>(db: State<'_, Db>, id: &'a str) -> Result<String, ()
         .render("notice.html", &Context::new())
         .unwrap())
 }
+
+#[tauri::command]
+pub async fn clear_logs(app: tauri::AppHandle) -> Result<String, ()> {
+    // let dialog = app.dialog().message("Test").title("Test").ok_button_label("Ok");
+
+    // dialog.show(|response| match response {
+    //     true => println!("True"),
+    //     false => println!("False"),
+    // });
+    Ok("Test".into())
+}

@@ -16,7 +16,7 @@ pub async fn refresh<T: tauri::Runtime>(payload: Payload, manager: &impl Manager
         Ok(res) => {
             println!("Inserted. Number of rows affected: {}", res.rows_affected());
             manager
-                .emit_all("newlog", format!("payload: {:?}", payload))
+                .emit("newlog", format!("payload: {:?}", payload))
                 .unwrap();
         }
     }
