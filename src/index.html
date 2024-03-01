@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" _="on load 
-    js 
+<html lang="en" _="on load
+    js
         return localStorage.getItem('theme') === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches
     end
     if it is true add .dark to <html/> then add @checked to <#themeSwitch/>">
@@ -22,45 +22,171 @@
 
 </head>
 
-<body class="font-semibold text-gray-600 dark:bg-slate-700 dark:text-slate-100 overflow-hidden">
-  <div class="flex flex-col">
-    <nav class="flex flex-row justify-between">
+<body class="font-semibold text-gray-600 dark:bg-slate-700 dark:text-slate-100">
+  <div class="flex flex-col min-h-screen">
+    <nav class="flex flex-row justify-between sticky top-0 z-50 dark:bg-slate-700 bg-white shadow-lg px-2">
       <div class="flex justify-center align-center">
         <h2 class="p-4">LiveLog 🔴</h2>
       </div>
-      <div>
-        <!-- Future content -->
+
+      <div class="flex flex-row justify-between filters items-center gap-2 pl-2" hx-post="command:apply_filters"
+        hx-include="input[name='color'], input[name='level'], input[name='search']" hx-target=" #mainContent"
+        hx-trigger="query">
+        <!-- color filters -->
+        <div>
+          <fieldset>
+            <input type="hidden" value="" name="color" _="on newcolor(color)
+                append `,$color,` to @value
+                send query() to <div.filters/>
+              end
+
+              on delcolor(color)
+                call (@value of me).split(',')
+                make a Set from it then set s to it
+                call s.delete(color)
+                call Array.from(s) then set my @value to it.join(',')
+                send query() to <div.filters/>
+              end
+
+              on load set my @value to <input[name='color[]']/>'s value end" />
+
+            <input type="checkbox" value="null" name="color[]" checked
+              _="on click set color to my value if my.checked is true then send newcolor(color: color) to <input[name='color']/> else send delcolor(color: color) to <input[name='color']/> end"
+              class="appearance-none rounded-full w-4 h-4 text-slate-400 border-slate-400 border-2 checked:bg-slate-400 dark:ring-offset-gray-800" />
+            <input type="checkbox" value="red" name="color[]"" checked
+            _=" on click set color to my value if my.checked is true then send newcolor(color: color) to
+              <input[name='color' ] /> else send delcolor(color: color) to
+            <input[name='color'] /> end"
+            class=" appearance-none rounded-full w-4 h-4 text-red-500 border-red-500 border-2 checked:bg-red-500
+            dark:ring-offset-gray-800" />
+            <input type="checkbox" value="yellow" name="color[]" checked
+              _="on click set color to my value if my.checked is true then send newcolor(color: color) to <input[name='color']/> else send delcolor(color: color) to <input[name='color']/> end"
+              class="appearance-none rounded-full w-4 h-4 text-yellow-500 border-yellow-500 border-2 checked:bg-yellow-500 dark:ring-offset-gray-800" />
+            <input type="checkbox" value="orange" name="color[]" checked
+              _="on click set color to my value if my.checked is true then send newcolor(color: color) to <input[name='color']/> else send delcolor(color: color) to <input[name='color']/> end"
+              class="appearance-none rounded-full w-4 h-4 text-orange-500 border-orange-500 border-2 checked:bg-orange-500 dark:ring-offset-gray-800" />
+            <input type="checkbox" value="purple" name="color[]" checked
+              _="on click set color to my value if my.checked is true then send newcolor(color: color) to <input[name='color']/> else send delcolor(color: color) to <input[name='color']/> end"
+              class="appearance-none rounded-full w-4 h-4 text-purple-500 border-purple-500 border-2 checked:bg-purple-500 dark:ring-offset-gray-800" />
+            <input type="checkbox" value="green" name="color[]" checked
+              _="on click set color to my value if my.checked is true then send newcolor(color: color) to <input[name='color']/> else send delcolor(color: color) to <input[name='color']/> end"
+              class="appearance-none rounded-full w-4 h-4 text-green-500 border-green-500 border-2 checked:bg-green-500 dark:ring-offset-gray-800" />
+            <input type="checkbox" value="blue" name="color[]" checked
+              _="on click set color to my value if my.checked is true then send newcolor(color: color) to <input[name='color']/> else send delcolor(color: color) to <input[name='color']/> end"
+              class="appearance-none rounded-full w-4 h-4 text-blue-500 border-blue-500 border-2 checked:bg-blue-500 dark:ring-offset-gray-800" />
+          </fieldset>
+        </div>
+        <!-- end color filters -->
+        <!-- level filters -->
+        <div class="flex flex-row">
+          <div class="flex flex-row flex-1">
+            <input type="hidden" value="" name="level" _="on newlevel(level)
+                append `,$level,` to @value
+                send query() to <div.filters/>
+              end
+
+              on dellevel(level)
+                call (@value of me).split(',')
+                make a Set from it then set s to it
+                call s.delete(level)
+                call Array.from(s) then set my @value to it.join(',')
+                send query() to <div.filters/>
+              end
+
+              on load set my @value to <input[name='level[]']/>'s value end" />
+            <div class="flex">
+              <input type="checkbox" value="info" name="level[]" checked
+                _="on click set level to my value if my.checked is true then send newlevel(level: level) to <input[name='level']/> else send dellevel(level: level) to <input[name='level']/> end"
+                class="appearance-none peer relative shrink-0 w-5 h-5 mt-1" />
+
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor"
+                class="absolute pointer-events-none w-5 h-5 fill-none stroke-blue-500 peer-checked:stroke-slate-100 peer-checked:fill-blue-500">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+              </svg>
+            </div>
+            <div class="flex">
+              <input type="checkbox" value="success" name="level[]" checked
+                _="on click set level to my value if my.checked is true then send newlevel(level: level) to <input[name='level']/> else send dellevel(level: level) to <input[name='level']/> end"
+                class="appearance-none peer relative shrink-0 w-5 h-5 mt-1" />
+
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor"
+                class="absolute pointer-events-none w-5 h-5 fill-none stroke-green-500 peer-checked:stroke-slate-100 peer-checked:fill-green-500">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+            </div>
+            <div class="flex">
+              <input type="checkbox" value="warning" name="level[]" checked
+                _="on click set level to my value if my.checked is true then send newlevel(level: level) to <input[name='level']/> else send dellevel(level: level) to <input[name='level']/> end"
+                class="appearance-none peer relative shrink-0 w-5 h-5 mt-1" />
+
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor"
+                class="absolute pointer-events-none w-5 h-5 fill-none stroke-orange-500 peer-checked:stroke-slate-100 peer-checked:fill-orange-500">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+              </svg>
+            </div>
+            <div class="flex">
+              <input type="checkbox" value="error" name="level[]" checked
+                class="appearance-none peer relative shrink-0 w-5 h-5 mt-1" />
+
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor"
+                class="absolute pointer-events-none w-5 h-5 fill-none stroke-red-500 peer-checked:stroke-slate-100 peer-checked:fill-red-500">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div>
+          <input type="text" name="search" placeholder="Search" class="rounded-lg shadow-inner text-slate-900 p-1"
+            _="on keyup debounced at 500ms send query() to <div.filters/>" />
+        </div>
       </div>
-      <div class="flex flex-row-reverse p-3">
+    </nav>
+    <main id="mainContent" class="whitespace-nowrap bg-white dark:bg-slate-800 overflow-y-auto flex-1" id="content"
+      hx-post="command:logs" hx-trigger="clearlogs, load delay:1s">
+    </main>
+    <footer class="z-50 bg-white dark:bg-slate-700 sticky bottom-0">
+      <div class="flex flex-row justify-end p-3 gap-2">
+        <button class="py-0 px-1 text-xs hover:scale-150" hx-post="command:clear_all" hx-target="#mainContent"><svg
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+            class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+          </svg>
+        </button>
         <div class="flex text-sm">
           <label class="inline-flex items-center cursor-pointer align-end">
-            <span class="text-sm font-medium text-gray-900 dark:text-gray-300">
+            <span class="text-sm font-medium text-gray-900 dark:text-gray-300"
+              _="on click if <html.dark/> exists then remove .dark from <html/> else add .dark to <html/> end if localStorage.theme == 'light' then call localStorage.setItem('theme', 'dark') else call localStorage.setItem('theme', 'light') end">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6">
+                stroke="currentColor" class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
               </svg>
             </span>
             <input id="themeSwitch" type="checkbox" value="" class="sr-only peer" _="on changed log 'test'">
             <div
-              class="mx-3 relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-              _="on click if <html.dark/> exists then remove .dark from <html/> else add .dark to <html/> end if localStorage.theme == 'light' then call localStorage.setItem('theme', 'dark') else call localStorage.setItem('theme', 'light') end""></div>
-					<span class=" text-sm font-medium text-gray-900 dark:text-gray-300">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+              class="mx-3 relative w-7 h-4 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] before:start-[1px] after:start-[1px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+              _="on click if <html.dark/> exists then remove .dark from <html/> else add .dark to <html/> end if localStorage.theme == 'light' then call localStorage.setItem('theme', 'dark') else call localStorage.setItem('theme', 'light') end">
+            </div>
+            <span class=" text-sm font-medium text-gray-900 dark:text-gray-300"
+              _="on click if <html.dark/> exists then remove .dark from <html/> else add .dark to <html/> end if localStorage.theme == 'light' then call localStorage.setItem('theme', 'dark') else call localStorage.setItem('theme', 'light') end">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                 <path fill-rule="evenodd"
                   d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
                   clip-rule="evenodd" />
               </svg>
-              </span>
+            </span>
           </label>
         </div>
-      </div>
-    </nav>
-  </div>
-  <div class="flex-1 flex flex-col bg-white dark:bg-slate-800 sm:flex-row overflow-auto max-h-screen">
-    <main id="mainContent" class="flex-1 whitespace-nowrap rounded-sm" id="content" hx-post="command:logs"
-      hx-trigger="load once delay:1s">
-    </main>
+    </footer>
   </div>
 </body>
 

@@ -1,5 +1,5 @@
 <script>
-  var data = {{log.data.data | json_encode() | safe }}
-  window.format_variable("{{log.id}}", data);
+  var data = {{ log.data.data | json_encode() | safe }}
+  window.format_variable("{{ log.id }}", data);
 </script>
 <span id="{{ log.id }}" />

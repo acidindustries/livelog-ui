@@ -1,40 +1,105 @@
-<div id="log_{{ log.id }}" class="log flex">
-  <div class="flex min-w-1/4 w-1/4 bg-gray-200 dark:bg-slate-700 p-2">
-    <div class="px-2 flex justify-between self-center gap-2">
-      <button class="p-0 text-xs hover:scale-150" hx-post="command:delete_log" hx-vals='{"id":"{{ log.id }}"}'
-        hx-target="closest .log" hx-swap="outerHTML">
+<script>console.log("Rendering to log from parent {{ log.id }}");</script>
+{% if log.color %}
+{% if log.color is matching("red") %}
+{% set color = "stroke-red-500" %}
+{% set border_color = "border-red-500" %}
+{% elif log.color is matching("yellow") %}
+{% set color = "stroke-yellow-500" %}
+{% set border_color = "border-yellow-500" %}
+{% elif log.color is matching("orange") %}
+{% set color = "stroke-orange-500" %}
+{% set border_color = "border-orange-500" %}
+{% elif log.color is matching("purple") %}
+{% set color = "stroke-purple-500" %}
+{% set border_color = "border-purple-500" %}
+{% elif log.color is matching("green") %}
+{% set color = "stroke-green-500" %}
+{% set border_color = "border-green-500" %}
+{% elif log.color is matching("blue") %}
+{% set color = "stroke-blue-500" %}
+{% set border_color = "border-blue-500" %}
+{% endif %}
+{% else %}
+{% set color = '' %}
+{% set border_color = 'border-gray-400' %}
+{% endif %}
+<div id="log_{{ log.id }}" class="log flex items-stretch shadow-inner">
+  <div class="flex flex-initial flex-row bg-gray-200 dark:bg-slate-700 items-center">
+    <div class="flex items-center">
+      <div class="flex px-2 justify-start self-center gap-2">
+        <button class="py-0 px-1 text-xs hover:scale-150" hx-post="command:delete_log" hx-vals='{"id":"{{ log.id }}"}'
+          hx-target="closest .log" hx-swap="outerHTML">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-4 h-4 {{color}}">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </button>
+        {% set log_type = log.data.type | json_encode() %}
+        {% if log_type is matching("Json") %}
+        <div>{...}</div>
+        {% elif log_type is matching("Variable") %}
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="w-4 h-4">
+          class="w-6 h-6 {{ color }}">
           <path stroke-linecap="round" stroke-linejoin="round"
-            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-        </svg></button>
-      {% set log_type = log.data.type | json_encode() %}
-      {% if log_type is matching("Json") %}
-      <div>{...}</div>
-      {% elif log_type is matching("Variable") %}
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-        class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M14.25 9.75 16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
-      </svg>
-      {% elif log_type is matching("Spacer") %}
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-        class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-      </svg>
-      {% elif log_type is matching("Message") %}
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-        class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
-      </svg>
-      {% endif %}
-      <div
-        class="min-w-[60px] border border-2 border-gray-400 bg-gray-200 dark:bg-slate-800 text-xs/[12px] p-1 text-center">
-        {{ log.date | date(format="%H:%M:%S") }}</div>
+            d="M14.25 9.75 16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+        </svg>
+        {% elif log_type is matching("Spacer") %}
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="w-6 h-6 {{ color }}">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+        {% elif log_type is matching("Message") %}
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="w-6 h-6 {{ color }}">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
+        </svg>
+        {% endif %}
+        <div
+          class="min-w-[60px] border border-2 bg-gray-200 dark:bg-slate-800 {{ border_color }} text-xs/[12px] p-1 text-center">
+          {{ log.date | date(format="%H:%M:%S") }}</div>
+      </div>
     </div>
   </div>
-  <div class="w-3/4">
+  {% set level_color = "" %}
+  {% if log.level %}
+  {% if log.level is matching("success") %}
+  {% set level_color = "border-t-2 border-b-2 border-green-500 border-opacity-40" %}
+  {% elif log.level is matching("warning") %}
+  {% set level_color = "border-t-2 border-b-2 border-orange-500 border-opacity-40" %}
+  {% elif log.level is matching("error") %}
+  {% set level_color = "border-t-2 border-b-2 border-red-500 border-opacity-40" %}
+  {% endif %}
+  {% endif %}
+  <div class="flex-1 flex flex-row {{ level_color }}">
+    {% if log.level %}
+    {% if log.level is matching("success") %}
+    <div class="bg-green-500 bg-opacity-40 items-center flex">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+      </svg>
+    </div>
+    {% elif log.level is matching("warning") %}
+    <div class="bg-orange-500 bg-opacity-40 items-center flex">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+      </svg>
+    </div>
+    {% elif log.level is matching("error") %}
+    <div class="bg-red-500 bg-opacity-40 items-center flex">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+      </svg>
+    </div>
+    {% endif %}
+    {% endif %}
     <div class="my-3 mx-1 text-sm">
       {% if log_type is matching("Json") %}
       {% include "json.html" %}
@@ -43,6 +108,12 @@
       {% elif log_type is matching("Message") %}
       {% include "message.html" %}
       {% endif %}
+      {% if log.source %}
+      <div class="text-xs/[8px] pt-1 opacity-50">
+        {{ log.source.file }} : {{ log.source.line }}
+      </div>
+      {% endif %}
     </div>
+
   </div>
 </div>

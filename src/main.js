@@ -7,13 +7,24 @@ window.JsonView = JsonView;
 const { invoke } = window.__TAURI__.tauri;
 const { listen } = window.__TAURI__.event;
 
-listen('newlog', () => {
-  htmx.trigger("#logs", "refresh");
+htmx.logAll();
+
+listen('newlog', (id) => {
+  console.log(id);
+  console.log("Calling invoke");
+  invoke('refresh_logs', { id: id.payload }).then((data) => {
+    console.log(data);
+    var logs = document.getElementById("logs")
+    let fragment = document.createRange().createContextualFragment(data);
+    logs.prepend(fragment);
+  }).catch((error) => console.log(error)); j
 });
 
-window.format_variable = function(node_id, data) {
-  console.log(data);
-  console.log(node_id);
+listen('clearlogs', () => {
+  htmx.trigger("#mainContent", 'clearlogs');
+})
+
+window.format_variable = function (node_id, data) {
   let tree = window.Tree.CreateTree(data);
   let jsonView = new window.JsonView(tree);
   jsonView.render(document.getElementById(node_id));

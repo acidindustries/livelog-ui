@@ -16,7 +16,7 @@ strip = true
 tauri-build = { version = "1.5", features = [] }
 
 [dependencies]
-tauri = { version = "1.5", features = ["api-all"] }
+tauri = { version = "1.5", features = [ "system-tray", "api-all"] }
 serde_json = "1.0"
 tera = "1"
 lazy_static = "1.4.0"
