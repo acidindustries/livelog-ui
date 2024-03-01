@@ -15,11 +15,15 @@
     "windows": [
       {
         "title": "livelog",
-        "width": 300,
+        "width": 400,
         "height": 600,
         "resizable": true
       }
     ],
+    "systemTray": {
+      "iconPath": "icons/32x32.png",
+      "iconAsTemplate": true
+    },
     "security": {
       "csp": null
     },

@@ -1,8 +1,0 @@
-<script type="module">
-  import {Tree, JsonView} from "./../static/collapser.js";
-  var data = {{log.data.data | json_encode() | safe }};
-  const tree = Tree.CreateTree(data);
-  const jsonView = new JsonView(tree);
-  jsonView.render(document.getElementById("{{ log.id }}"));
-</script>
-<span id="{{ log.id }}" />
