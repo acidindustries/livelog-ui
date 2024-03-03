@@ -4,9 +4,11 @@ use tauri::Manager;
 pub async fn refresh<T: tauri::Runtime>(payload: Payload, manager: &impl Manager<T>) {
     let db = manager.state::<Db>();
     let payload_value: serde_json::Value = serde_json::value::to_value(&payload).unwrap();
-    let id = sqlx::query(r#"INSERT INTO logs (data, source) VALUES (?, ?)"#)
+    let id = sqlx::query(r#"INSERT INTO logs (data, source, level, color) VALUES (?, ?, ?, ?)"#)
         .bind(&payload_value["payload_data"])
         .bind(&payload_value["source"])
+        .bind(&payload_value["level"].as_str())
+        .bind(&payload_value["color"].as_str())
         .execute(&**db)
         .await;
 
