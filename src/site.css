@@ -725,10 +725,6 @@ video {
   clear: none;
 }
 
-.m-2 {
-  margin: 0.5rem;
-}
-
 .mx-1 {
   margin-left: 0.25rem;
   margin-right: 0.25rem;
@@ -1973,6 +1969,11 @@ video {
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 
+.bg-gray-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+}
+
 .bg-green-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(34 197 94 / var(--tw-bg-opacity));
@@ -2154,10 +2155,6 @@ video {
 
 .p-4 {
   padding: 1rem;
-}
-
-.p-2 {
-  padding: 0.5rem;
 }
 
 .px-1 {
@@ -2415,11 +2412,6 @@ video {
 .text-slate-400 {
   --tw-text-opacity: 1;
   color: rgb(148 163 184 / var(--tw-text-opacity));
-}
-
-.text-slate-900 {
-  --tw-text-opacity: 1;
-  color: rgb(15 23 42 / var(--tw-text-opacity));
 }
 
 .text-yellow-500 {
@@ -3134,8 +3126,8 @@ button {
   fill: #ef4444;
 }
 
-.peer:checked ~ .peer-checked\:stroke-slate-100 {
-  stroke: #f1f5f9;
+.peer:checked ~ .peer-checked\:stroke-gray-900 {
+  stroke: #111827;
 }
 
 .peer:checked ~ .peer-checked\:after\:translate-x-full::after {
@@ -3208,6 +3200,10 @@ button {
 
 :is(.dark .dark\:ring-offset-gray-800) {
   --tw-ring-offset-color: #1f2937;
+}
+
+.peer:checked ~ :is(.dark .peer-checked\:dark\:stroke-gray-300) {
+  stroke: #d1d5db;
 }
 
 :is(.dark .peer:focus ~ .dark\:peer-focus\:ring-blue-800) {
