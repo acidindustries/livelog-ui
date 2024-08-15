@@ -57,7 +57,7 @@
         </svg>
         {% endif %}
         <div
-          class="min-w-[60px] border border-2 bg-gray-200 dark:bg-slate-800 {{ border_color }} text-xs/[12px] p-1 text-center">
+          class="min-w-[60px] border-2 bg-gray-200 dark:bg-slate-800 {{ border_color }} text-xs/[12px] p-1 text-center">
           {{ log.date | date(format="%H:%M:%S") }}</div>
       </div>
     </div>
@@ -100,7 +100,7 @@
     </div>
     {% endif %}
     {% endif %}
-    <div class="my-3 mx-1 text-sm">
+    <div class="my-3 mx-1 text-sm text-wrap break-all">
       {% if log_type is matching("Json") %}
       {% include "json.html" %}
       {% elif log_type is matching("Variable") %}
@@ -109,7 +109,7 @@
       {% include "message.html" %}
       {% endif %}
       {% if log.source %}
-      <div class="text-xs/[8px] pt-1 opacity-50">
+      <div class="text-xs pt-1 opacity-50 break-all">
         {{ log.source.file }} : {{ log.source.line }}
       </div>
       {% endif %}

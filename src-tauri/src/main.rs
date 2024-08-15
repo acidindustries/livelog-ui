@@ -14,6 +14,7 @@ mod models;
 mod payloads;
 mod server;
 mod templating;
+mod filters;
 
 fn main() {
     let (input_tx, input_rx) = mpsc::channel::<Payload>();
