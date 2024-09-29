@@ -23,7 +23,7 @@
 {% set color = '' %}
 {% set border_color = 'border-gray-400' %}
 {% endif %}
-<div id="log_{{ log.id }}" class="log flex items-stretch shadow-inner">
+<div id="log_{{ log.id }}" class="log flex items-stretch shadow-inner" data-id="{{ id }}">
   <div class="flex flex-initial flex-row bg-gray-200 dark:bg-slate-700 items-center">
     <div class="flex items-center">
       <div class="flex px-2 justify-start self-center gap-2">

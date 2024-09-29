@@ -1,2 +1,2 @@
 [global.limits]
-json = "5 MiB"
+json = "20 MiB"

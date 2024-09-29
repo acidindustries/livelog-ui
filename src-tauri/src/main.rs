@@ -1,20 +1,22 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use filters::Filter;
 use payloads::Payload;
 use std::sync::mpsc;
+use tauri::async_runtime::Mutex;
 use tauri::Manager;
-use tauri::{CustomMenuItem, SystemTrayMenuItem, SystemTrayMenu, SystemTray, SystemTrayEvent};
+use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem};
 
 mod commands;
 mod db;
 mod endpoints;
+mod filters;
 mod handlers;
 mod models;
 mod payloads;
 mod server;
 mod templating;
-mod filters;
 
 fn main() {
     let (input_tx, input_rx) = mpsc::channel::<Payload>();
@@ -30,20 +32,18 @@ fn main() {
                 } => {
                     window.show().unwrap();
                 }
-                SystemTrayEvent::MenuItemClick {id, .. } => {
-                    match id.as_str() {
-                        "quit" => {
-                            std::process::exit(0);
-                        }
-                        "hide" => {
-                            window.hide().unwrap();
-                        }
-                        "show" => {
-                            window.show().unwrap();
-                        }
-                        _ => {}
+                SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
+                    "quit" => {
+                        std::process::exit(0);
                     }
-                }
+                    "hide" => {
+                        window.hide().unwrap();
+                    }
+                    "show" => {
+                        window.show().unwrap();
+                    }
+                    _ => {}
+                },
                 _ => {}
             }
         })
@@ -54,6 +54,7 @@ fn main() {
             }
             _ => {}
         })
+        .manage(Mutex::new(Filter::new(None, None, None)))
         .manage(db::Db(tauri::async_runtime::block_on(db::init())))
         .invoke_handler(tauri::generate_handler![
             commands::logs,

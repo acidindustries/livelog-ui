@@ -1,5 +1,6 @@
 use log;
 use sqlx::{QueryBuilder, Sqlite};
+use tauri::async_runtime::Mutex;
 use tauri::{Manager, State, Window};
 use tera::Context;
 
@@ -31,24 +32,31 @@ pub async fn logs(db: State<'_, Db>) -> Result<String, ()> {
 #[tauri::command]
 pub async fn apply_filters(
     db: State<'_, Db>,
+    filter: State<'_, Mutex<Filter>>,
     color: Option<String>,
     level: Option<String>,
     search: Option<String>,
 ) -> Result<String, ()> {
-    println!("Apply filters Colors: {:?}", color);
-    println!("Input filter: {:?}", search);
     let mut context = Context::new();
     let mut query_builder: QueryBuilder<'_, Sqlite> =
         QueryBuilder::new(r#"SELECT id, date, data, source, color, level, extras FROM logs"#);
 
     let colors = Some(color).unwrap().filter(|color| !color.is_empty());
 
-    let t = Filter::new(colors, level, search);
+    let t = Filter::new(colors, level.clone(), search.clone());
+    let f = &mut filter.lock().await;
+    // f = &t;
+    f.color = t.color;
+    f.level = t.level;
+    f.search = t.search;
 
-    let logs: Result<Vec<Log>, _> = t.get_query(&mut query_builder).fetch_all(&**db).await;
+    let logs: Result<Vec<Log>, _> = f
+        .clone()
+        .get_query(&mut query_builder, true)
+        .fetch_all(&**db)
+        .await;
     match logs {
         Ok(logs) => {
-            println!("{:?}", logs);
             log::debug!("{:?}", logs);
             context.insert("logs", &logs);
             Ok(templating::TEMPLATES
@@ -60,15 +68,26 @@ pub async fn apply_filters(
 }
 
 #[tauri::command]
-pub async fn refresh_logs(db: State<'_, Db>, id: i64) -> Result<String, ()> {
+pub async fn refresh_logs(
+    db: State<'_, Db>,
+    filters: State<'_, Mutex<Filter>>,
+    id: i64,
+) -> Result<String, ()> {
     let mut context = Context::new();
-    let log: Result<Log, _> = sqlx::query_as::<_, Log>(r"SELECT * FROM logs WHERE rowid = ?;")
+    let mut query_builder: QueryBuilder<'_, Sqlite> =
+        QueryBuilder::new(r#"SELECT * FROM logs WHERE rowid = ?"#);
+    let log = filters
+        .lock()
+        .await
+        .clone()
+        .get_query(&mut query_builder, false)
         .bind(id)
         .fetch_one(&**db)
         .await;
 
     match log {
         Ok(log) => {
+            context.insert("id", &id);
             context.insert("log", &log);
             return Ok(templating::TEMPLATES
                 .render("newlogs.html", &context)

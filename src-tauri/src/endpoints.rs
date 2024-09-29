@@ -7,16 +7,13 @@ use std::sync::mpsc::Sender;
 pub async fn ingest(tx_payload: &State<Sender<Payload>>, payload: String) -> Json<String> {
     let p: Result<Payload, _> = serde_json::from_str(&payload[..]);
     match p {
-        Ok(payload) => {
-            println!("{:?}", payload);
-            match tx_payload.send(payload) {
-                Ok(_) => (),
-                Err(e) => {
-                    log::debug!("Error sending event: {}", e);
-                    return Json(e.to_string());
-                }
+        Ok(payload) => match tx_payload.send(payload) {
+            Ok(_) => (),
+            Err(e) => {
+                log::debug!("Error sending event: {}", e);
+                return Json(e.to_string());
             }
-        }
+        },
         Err(e) => {
             log::debug!("Error: {}", e);
             return Json(e.to_string());
