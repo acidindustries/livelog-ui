@@ -23,7 +23,7 @@
 {% set color = '' %}
 {% set border_color = 'border-gray-400' %}
 {% endif %}
-<div id="log_{{ log.id }}" class="log flex items-stretch shadow-inner">
+<div id="log_{{ log.id }}" class="log flex items-stretch shadow-inner" data-id="{{ id }}">
   <div class="flex flex-initial flex-row bg-gray-200 dark:bg-slate-700 items-center">
     <div class="flex items-center">
       <div class="flex px-2 justify-start self-center gap-2">
@@ -57,7 +57,7 @@
         </svg>
         {% endif %}
         <div
-          class="min-w-[60px] border border-2 bg-gray-200 dark:bg-slate-800 {{ border_color }} text-xs/[12px] p-1 text-center">
+          class="min-w-[60px] border-2 bg-gray-200 dark:bg-slate-800 {{ border_color }} text-xs/[12px] p-1 text-center">
           {{ log.date | date(format="%H:%M:%S") }}</div>
       </div>
     </div>
@@ -100,7 +100,7 @@
     </div>
     {% endif %}
     {% endif %}
-    <div class="my-3 mx-1 text-sm">
+    <div class="my-3 mx-1 text-sm text-wrap break-all">
       {% if log_type is matching("Json") %}
       {% include "json.html" %}
       {% elif log_type is matching("Variable") %}
@@ -109,7 +109,7 @@
       {% include "message.html" %}
       {% endif %}
       {% if log.source %}
-      <div class="text-xs/[8px] pt-1 opacity-50">
+      <div class="text-xs pt-1 opacity-50 break-all">
         {{ log.source.file }} : {{ log.source.line }}
       </div>
       {% endif %}

@@ -1,7 +1,7 @@
 use std::sync::mpsc::Sender;
 
-use crate::{endpoints, payloads::Payload};
-use rocket::{self, routes};
+use crate::{endpoints, filters::Filter, payloads::Payload};
+use rocket::{self, futures::lock::Mutex, routes};
 
 pub async fn init(
     tx_channel: Sender<Payload>,

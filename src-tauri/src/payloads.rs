@@ -19,7 +19,6 @@ pub struct SourceData {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Payload {
-    #[serde(default)]
     date: DateTime<Utc>,
     payload_data: PayloadData,
     source: Option<SourceData>,

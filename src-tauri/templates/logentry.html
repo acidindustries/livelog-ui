@@ -2,6 +2,7 @@
   hx-post="command:refresh_logs" hx-include="[name='color']" hx-swap="afterbegin transition:true" hx-target="#logs">
   {% if logs %}
   {% for log in logs %}
+  {% set id = log.id %}
   {% include "logchunk.html" %}
   {% endfor %}
   {% else %}
